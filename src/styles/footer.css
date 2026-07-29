@@ -1,0 +1,29 @@
+.footer{
+
+background:#111;
+
+color:white;
+
+padding:60px 20px;
+
+text-align:center;
+
+}
+
+.footer h3{
+
+font-size:28px;
+
+margin-bottom:20px;
+
+}
+
+.footer p{
+
+margin-top:10px;
+
+color:#bbb;
+
+line-height:1.7;
+
+}
