@@ -33,6 +33,22 @@ function Gallery({ setSelectedPhoto }) {
         </section>
 
     );
+    if (photos.length === 0) {
+
+    return (
+
+        <section id="gallery" className="gallery-section">
+
+            <h2>Event Gallery</h2>
+
+            <p>No photos have been uploaded yet.</p>
+
+        </section>
+
+    );
+
+}
+
 
 }
 

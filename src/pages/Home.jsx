@@ -1,23 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Gallery from "../components/Gallery";
 import Lightbox from "../components/Lightbox";
+import ScrollTop from "../components/ScrollTop";
 import Footer from "../components/Footer";
+import Loader from "../components/Loader";
+
 
 function Home() {
 
     const [selectedPhoto, setSelectedPhoto] = useState(null);
 
-    return (
-        <>
-            <Navbar />
+    const [loading, setLoading] = useState(true);
 
-            <Hero />
+    useEffect(() => {
+
+        const timer = setTimeout(() => {
+
+            setLoading(false);
+
+        },1000);
+
+        return ()=>clearTimeout(timer);
+
+    },[]);
+
+    if(loading){
+
+        return <Loader/>;
+
+    }
+
+    return(
+
+        <>
+
+            <Navbar/>
+
+            <Hero/>
 
             <Gallery
-                selectedPhoto={selectedPhoto}
                 setSelectedPhoto={setSelectedPhoto}
             />
 
@@ -25,8 +49,15 @@ function Home() {
                 selectedPhoto={selectedPhoto}
                 setSelectedPhoto={setSelectedPhoto}
             />
+            <ScrollTop/>
+
+
+            <Footer/>
+
         </>
+
     );
+
 }
 
 export default Home;

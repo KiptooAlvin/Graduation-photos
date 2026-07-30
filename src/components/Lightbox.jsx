@@ -66,6 +66,18 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
 
     };
 
+    useEffect(() => {
+
+        if (!selectedPhoto) return;
+
+        const next = (currentIndex + 1) % photos.length;
+
+        const img = new Image();
+
+        img.src = photos[next].full;
+
+    }, [selectedPhoto, currentIndex]);
+
     return (
 
         <div className="lightbox">
@@ -102,6 +114,12 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
 
             />
 
+            <div className="photo-counter">
+
+                {currentIndex + 1} / {photos.length}
+
+            </div>
+
             <button
 
                 className="nav right"
@@ -118,7 +136,7 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
 
                 href={selectedPhoto.full}
 
-                download
+                download={`Graduation-Event-${selectedPhoto.id}.jpg`}
 
                 className="download-btn"
 
@@ -127,6 +145,7 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
                 ⬇ Download Original
 
             </a>
+          
 
         </div>
 

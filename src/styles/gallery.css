@@ -114,3 +114,16 @@ transform:translateY(0);
 }
 
 }
+.gallery-item img.loading{
+
+opacity:0;
+
+}
+
+.gallery-item img.loaded{
+
+opacity:1;
+
+transition:opacity .5s ease;
+
+}

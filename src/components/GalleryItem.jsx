@@ -1,4 +1,8 @@
+import { useState } from "react";
+
 function GalleryItem({ photo, setSelectedPhoto }) {
+
+    const [loaded, setLoaded] = useState(false);
 
     return (
 
@@ -11,6 +15,11 @@ function GalleryItem({ photo, setSelectedPhoto }) {
                 src={photo.thumb}
                 alt="Event"
                 loading="lazy"
+                className={loaded ? "loaded" : "loading"}
+                onLoad={() => setLoaded(true)}
+                onError={(e) => {
+                    e.target.src = "/images/photo-unavailable.png";
+                }}
             />
 
         </div>

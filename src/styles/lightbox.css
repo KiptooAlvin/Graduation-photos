@@ -165,3 +165,22 @@ font-size:15px;
 }
 
 }
+.photo-counter{
+
+position:absolute;
+
+top:30px;
+
+left:30px;
+
+color:white;
+
+font-size:18px;
+
+background:rgba(0,0,0,.45);
+
+padding:10px 16px;
+
+border-radius:30px;
+
+}
