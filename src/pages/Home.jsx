@@ -9,7 +9,12 @@ import Footer from "../components/Footer";
 import Loader from "../components/Loader";
 
 
+import CuriosityPill from "../components/experiment/CuriosityPill";
+import Experiment from "../components/experiment/Experiment";
+
+
 function Home() {
+    const [experimentOpen, setExperimentOpen] = useState(false);
 
     const [selectedPhoto, setSelectedPhoto] = useState(null);
 
@@ -50,6 +55,14 @@ function Home() {
                 setSelectedPhoto={setSelectedPhoto}
             />
             <ScrollTop/>
+            <CuriosityPill
+                onClick={() => setExperimentOpen(true)}
+            />
+
+            <Experiment
+                isOpen={experimentOpen}
+                onClose={() => setExperimentOpen(false)}
+            />
 
 
             <Footer/>
