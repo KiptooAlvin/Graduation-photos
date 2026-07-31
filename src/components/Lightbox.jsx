@@ -6,6 +6,34 @@ import "../styles/lightbox.css";
 
 function Lightbox({ selectedPhoto, setSelectedPhoto }) {
 
+    const currentIndex = selectedPhoto
+        ? photos.findIndex(p => p.id === selectedPhoto.id)
+        : -1;
+
+    const nextImage = () => {
+
+        if (currentIndex < 0) return;
+
+        const next = (currentIndex + 1) % photos.length;
+
+        setSelectedPhoto(photos[next]);
+
+    };
+
+    const previousImage = () => {
+
+        if (currentIndex < 0) return;
+
+        const prev =
+
+            (currentIndex - 1 + photos.length)
+
+            % photos.length;
+
+        setSelectedPhoto(photos[prev]);
+
+    };
+
     useEffect(() => {
 
         const handleKeyDown = (e) => {
@@ -36,35 +64,7 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
 
         return () => window.removeEventListener("keydown", handleKeyDown);
 
-    });
-
-    if (!selectedPhoto) return null;
-
-    const currentIndex = photos.findIndex(
-
-        p => p.id === selectedPhoto.id
-
-    );
-
-    const nextImage = () => {
-
-        const next = (currentIndex + 1) % photos.length;
-
-        setSelectedPhoto(photos[next]);
-
-    };
-
-    const previousImage = () => {
-
-        const prev =
-
-            (currentIndex - 1 + photos.length)
-
-            % photos.length;
-
-        setSelectedPhoto(photos[prev]);
-
-    };
+    }, [selectedPhoto, currentIndex, setSelectedPhoto]);
 
     useEffect(() => {
 
@@ -77,6 +77,8 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
         img.src = photos[next].full;
 
     }, [selectedPhoto, currentIndex]);
+
+    if (!selectedPhoto) return null;
 
     return (
 
