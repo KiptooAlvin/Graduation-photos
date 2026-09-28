@@ -1,29 +1,31 @@
 import { useState } from "react";
 
 function GalleryItem({ photo, setSelectedPhoto }) {
-    const [state, setState] = useState("loading");
+
+    const [loaded, setLoaded] = useState(false);
 
     return (
-        <button
-            className={"tile" + (state === "ok" ? " done" : "") + (state === "bad" ? " bad" : "")}
+
+        <div
+            className="gallery-item"
             onClick={() => setSelectedPhoto(photo)}
-            aria-label={`Open photo ${photo.id}`}
         >
-            {state === "bad" ? "Unavailable" : (
-                <img
-                    src={photo.thumb}
-                    width={photo.width}
-                    height={photo.height}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    className={state === "ok" ? "ok" : ""}
-                    onLoad={() => setState("ok")}
-                    onError={() => setState("bad")}
-                />
-            )}
-        </button>
+
+            <img
+                src={photo.thumb}
+                alt="Event"
+                loading="lazy"
+                className={loaded ? "loaded" : "loading"}
+                onLoad={() => setLoaded(true)}
+                onError={(e) => {
+                    e.target.src = "/images/photo-unavailable.png";
+                }}
+            />
+
+        </div>
+
     );
-}
+
+}x
 
 export default GalleryItem;
