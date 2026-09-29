@@ -70,6 +70,8 @@ img{display:block;max-width:100%}a{color:inherit;text-decoration:none}button{fon
 .round{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .lb-nav{position:absolute;top:50%;translate:0 -50%;z-index:2;width:52px;height:52px}
 .lb-nav.prev{left:18px}.lb-nav.next{right:18px}
+@media(max-width:639px){.lb[data-orientation="portrait"] .lb-top{padding-inline:10px}.lb[data-orientation="portrait"] .lb-bar{padding-inline:12px}}
+@media(orientation:landscape){.lb[data-zoom="1"] .lb-bar{padding-bottom:12px}}
 @media(hover:none){.lb-nav{display:none}}
 .lb-bar .btn{width:100%;max-width:380px}
 

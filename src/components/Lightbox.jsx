@@ -57,9 +57,13 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
         });
     }, [render]);
     const fit = useCallback(() => {
-        const vw = innerWidth, vh = innerHeight, fw = Math.min(vw, vh * R.current.ratio), fh = fw / R.current.ratio;
+        const viewport = window.visualViewport;
+        const vw = viewport?.width || innerWidth, vh = viewport?.height || innerHeight;
+        const left = viewport?.offsetLeft || 0, top = viewport?.offsetTop || 0;
+        const fw = Math.min(vw, vh * R.current.ratio), fh = fw / R.current.ratio;
         d.current = { vw, vh, fw, fh };
-        Object.assign(wrap.current.style, { width: fw + "px", height: fh + "px", left: (vw - fw) / 2 + "px", top: (vh - fh) / 2 + "px" });
+        if (root.current) root.current.dataset.orientation = vw >= vh ? "landscape" : "portrait";
+        Object.assign(wrap.current.style, { width: fw + "px", height: fh + "px", left: left + (vw - fw) / 2 + "px", top: top + (vh - fh) / 2 + "px" });
     }, []);
     const onRatio = (r) => { if (Math.abs(r / R.current.ratio - 1) > 0.02) { R.current.ratio = r; fit(); } };
     const bnd = (s) => ({ mx: Math.max(0, (d.current.fw * s - d.current.vw) / 2), my: Math.max(0, (d.current.fh * s - d.current.vh) / 2) });
@@ -128,11 +132,15 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
         const onResize = () => { fit(); st.current = { x: 0, y: 0, s: 1, r: 0 }; render(); };
         window.addEventListener("popstate", onPop);
         window.addEventListener("resize", onResize);
+        window.visualViewport?.addEventListener("resize", onResize);
+        window.visualViewport?.addEventListener("scroll", onResize);
         root.current?.querySelector(".round")?.focus({ preventScroll: true });
         return () => {
             document.body.style.overflow = "";
             window.removeEventListener("popstate", onPop);
             window.removeEventListener("resize", onResize);
+            window.visualViewport?.removeEventListener("resize", onResize);
+            window.visualViewport?.removeEventListener("scroll", onResize);
         };
     }, [open, animateClose, fit, render]);
 
