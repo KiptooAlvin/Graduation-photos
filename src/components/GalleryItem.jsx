@@ -1,8 +1,14 @@
 import { useState } from "react";
 
+const FALLBACK_THUMB = "/images/photo-unavailable.png";
+
 function GalleryItem({ photo, setSelectedPhoto }) {
 
     const [loaded, setLoaded] = useState(false);
+
+    const handleError = (event) => {
+        event.currentTarget.src = FALLBACK_THUMB;
+    };
 
     return (
 
@@ -17,15 +23,13 @@ function GalleryItem({ photo, setSelectedPhoto }) {
                 loading="lazy"
                 className={loaded ? "loaded" : "loading"}
                 onLoad={() => setLoaded(true)}
-                onError={(e) => {
-                    e.target.src = "/images/photo-unavailable.png";
-                }}
+                onError={handleError}
             />
 
         </div>
 
     );
 
-}x
+}
 
 export default GalleryItem;
