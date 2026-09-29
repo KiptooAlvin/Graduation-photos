@@ -36,7 +36,7 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
 
     const render = useCallback(() => {
         const s = st.current;
-        if (!wrap.current) return;
+        if (!wrap.current || !root.current) return;
         wrap.current.style.transform = `translate3d(${s.x}px,${s.y}px,0) scale(${s.s}) rotate(${s.r}deg)`;
         if (amb.current) amb.current.style.transform = `translate3d(${-s.x * 0.06}px,${-s.y * 0.06}px,0) scale(1.15)`;
         const z = s.s > 1.02 ? "1" : "";
@@ -170,12 +170,23 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
         if (st.current.s < 1) buzz(6);
         tween({ s, x: s === 1 ? 0 : clamp(st.current.x, -mx, mx), y: s === 1 ? 0 : clamp(st.current.y, -my, my), r: 0 }, 420);
     };
+    const zoomAt = (x, y, target, duration = 420) => {
+        const { vw, vh } = d.current, current = st.current.s;
+        const next = clamp(target, 1, 5), px = (x - vw / 2 - st.current.x) / current, py = (y - vh / 2 - st.current.y) / current;
+        const { mx, my } = bnd(next);
+        tween({ s: next, x: clamp(x - vw / 2 - px * next, -mx, mx), y: clamp(y - vh / 2 - py * next, -my, my), r: 0 }, duration);
+    };
     const dbl = (x, y) => {
         buzz(10);
         if (st.current.s > 1.05) { tween({ s: 1, x: 0, y: 0, r: 0 }, 450); return; }
-        const { vw, vh, fh } = d.current, S = clamp(vh / fh, 2.4, 4), { mx, my } = bnd(S);
-        const px = (x - vw / 2 - st.current.x) / st.current.s, py = (y - vh / 2 - st.current.y) / st.current.s;
-        tween({ s: S, x: clamp(x - vw / 2 - px * S, -mx, mx), y: clamp(y - vh / 2 - py * S, -my, my), r: 0 }, 480);
+        const { vh, fh } = d.current;
+        zoomAt(x, y, clamp(vh / fh, 2.4, 4), 480);
+    };
+    const onWheel = (e) => {
+        e.preventDefault();
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left - d.current.vw / 2, y = e.clientY - rect.top - d.current.vh / 2;
+        zoomAt(x, y, st.current.s * Math.exp(-e.deltaY * 0.0025), 120);
     };
     const tap = (e) => {
         const r = R.current, t = r.tap, now = performance.now(), x = e.clientX, y = e.clientY;
@@ -189,7 +200,7 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
     };
     const onDown = (e) => {
         const r = R.current; e.currentTarget.setPointerCapture(e.pointerId);
-        r.P.set(e.pointerId, { x: e.clientX, y: e.clientY }); cancelAnimationFrame(r.anim);
+        r.P.set(e.pointerId, { x: e.clientX, y: e.clientY }); cancelAnimationFrame(r.anim); cancelAnimationFrame(r.raf);
         if (r.P.size === 2) {
             const [a, b] = [...r.P.values()]; clearTimeout(r.tt);
             r.g = { m: "pinch", dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, s: st.current.s, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, x: st.current.x, y: st.current.y };
@@ -265,7 +276,7 @@ function Lightbox({ selectedPhoto, setSelectedPhoto }) {
     return (
         <div ref={root} className={"lb" + (hideUi ? " hide" : "") + (closing ? " closing" : "")} role="dialog" aria-modal="true" aria-label="Photo viewer">
             <div ref={bd} className="lb-bd"><img ref={amb} className="lb-amb" src={selectedPhoto.thumb} alt="" aria-hidden="true" /></div>
-            <div className="lb-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
+            <div className="lb-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onWheel={onWheel}>
                 <div ref={wrap} className="lb-img"><Pics key={selectedPhoto.id} photo={selectedPhoto} onRatio={onRatio} /></div>
             </div>
 
